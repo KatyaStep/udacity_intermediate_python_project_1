@@ -24,16 +24,16 @@ def load_neos(neo_csv_path="data/neos.csv"):
     :param neo_csv_path: A path to a CSV file containing data about near-Earth objects.
     :return: A collection of `NearEarthObject`s.
     """
-    # TODO: Load NEO data from the given CSV file.
     neo_objects = []
 
-    with open(neo_csv_path, 'r') as f:
-        data = csv.DictReader(f)
+    # Load NEO data from the given CSV file.
+    with open(neo_csv_path, "r", encoding="utf-8") as csv_file:
+        data = csv.DictReader(csv_file)
         for line in data:
-            designation = line['pdes']
-            name = line['name']
-            diameter = line['diameter']
-            hazardous = line['pha']
+            designation = line["pdes"]
+            name = line["name"]
+            diameter = line["diameter"]
+            hazardous = line["pha"]
             neo_objects.append(NearEarthObject(designation, name, diameter, hazardous))
 
     return neo_objects
@@ -45,18 +45,21 @@ def load_approaches(cad_json_path="data/cad.json"):
     :param cad_json_path: A path to a JSON file containing data about close approaches.
     :return: A collection of `CloseApproach`es.
     """
-    # TODO: Load close approach data from the given JSON file.
     close_approaches = []
 
-    with open(cad_json_path) as f:
-        content = json.load(f)
-        data = content['data']
+    # Load close approach data from the given JSON file.
+    with open(cad_json_path, encoding="utf-8") as json_file:
+        content = json.load(json_file)
+        data = content["data"]
         for line in data:
             des = line[0]
             time = line[3]
             distance = line[4]
             velocity = line[7]
-            close_approaches.append(CloseApproach(designation=des, time=time, distance=distance, velocity=velocity))
+            close_approaches.append(
+                CloseApproach(
+                    designation=des, time=time, distance=distance, velocity=velocity
+                )
+            )
 
     return close_approaches
-

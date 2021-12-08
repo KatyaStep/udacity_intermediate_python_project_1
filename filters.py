@@ -39,6 +39,7 @@ class AttributeFilter:
     Concrete subclasses can override the `get` classmethod to provide custom
     behavior to fetch a desired attribute from the given `CloseApproach`.
     """
+
     def __init__(self, op, value):
         """Construct a new `AttributeFilter` from an binary predicate and a reference value.
 
@@ -74,41 +75,52 @@ class AttributeFilter:
 
 
 class DateFilter(AttributeFilter):
+    """ An inherited from superclass AttributeFilter DateFilter class for filter dates"""
     @classmethod
     def get(cls, approach):
-        # print(str(approach.time.date()))
         return approach.time.date()
 
 
 class DistanceFilter(AttributeFilter):
+    """ An inherited from superclass AttributeFilter DistanceFilter class for filter distance"""
     @classmethod
     def get(cls, approach):
         return approach.distance
 
 
 class VelocityFilter(AttributeFilter):
+    """ An inherited from superclass AttributeFilter VelocityFilter class for filter velocity"""
     @classmethod
     def get(cls, approach):
         return approach.velocity
 
 
 class DiameterFilter(AttributeFilter):
+    """ An inherited from superclass AttributeFilter DiameterFilter class for filter diameter"""
     @classmethod
     def get(cls, approach):
         return approach.neo.diameter
 
 
 class HazardousFilter(AttributeFilter):
+    """ An inherited from superclass AttributeFilter HazardousFilter class for filter hazardous"""
     @classmethod
     def get(cls, approach):
         return approach.neo.hazardous
 
 
-def create_filters(date=None, start_date=None, end_date=None,
-                   distance_min=None, distance_max=None,
-                   velocity_min=None, velocity_max=None,
-                   diameter_min=None, diameter_max=None,
-                   hazardous=None):
+def create_filters(
+    date=None,
+    start_date=None,
+    end_date=None,
+    distance_min=None,
+    distance_max=None,
+    velocity_min=None,
+    velocity_max=None,
+    diameter_min=None,
+    diameter_max=None,
+    hazardous=None,
+):
     """Create a collection of filters from user-specified criteria.
 
     Each of these arguments is provided by the main module with a value from the
@@ -138,36 +150,37 @@ def create_filters(date=None, start_date=None, end_date=None,
     :param hazardous: Whether the NEO of a matching `CloseApproach` is potentially hazardous.
     :return: A collection of filters for use with `query`.
     """
-    # TODO: Decide how you will represent your filters.
+    # a list for storing a collection of filters
     filters = []
 
+    # date filter
     if date:
         filters.append(DateFilter(operator.eq, date))
-
+    # date filter
     if start_date:
         filters.append(DateFilter(operator.ge, start_date))
-
+    # date filter
     if end_date:
         filters.append(DateFilter(operator.le, end_date))
-
+    # distance filter
     if distance_min:
         filters.append(DistanceFilter(operator.ge, distance_min))
-
+    # distance filter
     if distance_max:
         filters.append(DistanceFilter(operator.le, distance_max))
-
+    # velocity filter
     if velocity_min:
         filters.append(VelocityFilter(operator.ge, velocity_min))
-
+    # velocity filter
     if velocity_max:
         filters.append(VelocityFilter(operator.le, velocity_max))
-
+    # diameter filter
     if diameter_min:
         filters.append(DiameterFilter(operator.ge, diameter_min))
-
+    # diameter filter
     if diameter_max:
         filters.append(DiameterFilter(operator.le, diameter_max))
-
+    # hazardous filter
     if hazardous is not None:
         filters.append(HazardousFilter(operator.eq, hazardous))
 
@@ -183,11 +196,10 @@ def limit(iterator, n=None):
     :param n: The maximum number of values to produce.
     :yield: The first (at most) `n` values from the iterator.
     """
-    # TODO: Produce at most `n` values from the given iterator.
+    # Produce at most `n` values from the given iterator.
     if n is not None and n > 0:
         for value in islice(iterator, n):
             yield value
     else:
         for value in iterator:
             yield value
-
