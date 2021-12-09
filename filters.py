@@ -78,6 +78,7 @@ class DateFilter(AttributeFilter):
     """ An inherited from superclass AttributeFilter DateFilter class for filter dates"""
     @classmethod
     def get(cls, approach):
+        """Get a date attribute from a close approach."""
         return approach.time.date()
 
 
@@ -85,6 +86,7 @@ class DistanceFilter(AttributeFilter):
     """ An inherited from superclass AttributeFilter DistanceFilter class for filter distance"""
     @classmethod
     def get(cls, approach):
+        """Get a distance attribute from a close approach."""
         return approach.distance
 
 
@@ -92,6 +94,7 @@ class VelocityFilter(AttributeFilter):
     """ An inherited from superclass AttributeFilter VelocityFilter class for filter velocity"""
     @classmethod
     def get(cls, approach):
+        """Get a velocity attribute from a close approach."""
         return approach.velocity
 
 
@@ -99,6 +102,7 @@ class DiameterFilter(AttributeFilter):
     """ An inherited from superclass AttributeFilter DiameterFilter class for filter diameter"""
     @classmethod
     def get(cls, approach):
+        """Get a diameter attribute from a close approach."""
         return approach.neo.diameter
 
 
@@ -106,6 +110,7 @@ class HazardousFilter(AttributeFilter):
     """ An inherited from superclass AttributeFilter HazardousFilter class for filter hazardous"""
     @classmethod
     def get(cls, approach):
+        """Get a hazardous attribute from a close approach."""
         return approach.neo.hazardous
 
 
@@ -197,7 +202,15 @@ def limit(iterator, n=None):
     :yield: The first (at most) `n` values from the iterator.
     """
     # Produce at most `n` values from the given iterator.
-    if n is not None and n > 0:
+    # if n is not None and n > 0:
+    #     for value in islice(iterator, n):
+    #         yield value
+    # else:
+    #     for value in iterator:
+    #         yield value
+
+    # Suggestion from a udacity reviewer
+    if n:
         for value in islice(iterator, n):
             yield value
     else:

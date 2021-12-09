@@ -45,19 +45,19 @@ class NEODatabase:
         self._neos = neos
         self._approaches = approaches
 
-        self.designation = defaultdict(list)
-        self.name = defaultdict(list)
+        self.designation = defaultdict()
+        self.name = defaultdict()
 
         # Store neo-object in dictionaries to extract information quicker
         for neo in self._neos:
-            self.designation[neo.designation].append(neo)
-            self.name[neo.name].append(neo)
+            self.designation[neo.designation] = neo
+            self.name[neo.name] = neo
 
         # Link together the NEOs and their close approaches.
         for approach in self._approaches:
             neo = self.designation.get(approach.designation)
-            neo[0].approaches.append(approach)
-            approach.neo = neo[0]
+            neo.approaches.append(approach)
+            approach.neo = neo
 
     def get_neo_by_designation(self, designation):
         """Find and return an NEO by its primary designation.
@@ -74,7 +74,7 @@ class NEODatabase:
         """
         # Fetch an NEO by its primary designation.
         return (
-            self.designation[designation][0] if self.designation[designation] else None
+            self.designation.get(designation) if self.designation.get(designation) else None
         )
 
     def get_neo_by_name(self, name):
@@ -92,7 +92,7 @@ class NEODatabase:
         :return: The `NearEarthObject` with the desired name, or `None`.
         """
         # Fetch an NEO by its name.
-        return self.name[name][0] if self.name[name] else None
+        return self.name.get(name) if self.name.get(name) else None
 
     def query(self, filters=()):
         """Query close approaches to generate those that match a collection of filters.
@@ -109,11 +109,17 @@ class NEODatabase:
         :return: A stream of matching `CloseApproach` objects.
         """
         # Generate `CloseApproach` objects that match all of the filters.
+        # for approach in self._approaches:
+        #     is_passed = True
+        #     for criteria in filters:
+        #         if not criteria(approach):
+        #             is_passed = False
+        #             break
+        #     if is_passed:
+        #         yield approach
+
+        # Suggestion from a udacity reviewer
         for approach in self._approaches:
-            is_passed = True
-            for criteria in filters:
-                if not criteria(approach):
-                    is_passed = False
-                    break
-            if is_passed:
+            if all(criteria(approach) for criteria in filters):
                 yield approach
+
